@@ -1,0 +1,15 @@
+# Maven
+target/
+.m2/
+.mvn/
+
+# IDE
+.idea/
+*.iml
+
+# Test Reports
+reports/
+test-output/
+
+# Logs
+*.log

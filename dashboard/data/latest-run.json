@@ -1,0 +1,35 @@
+{
+  "generatedAt" : "2026-04-24 09:38:51",
+  "pipelineStatus" : "SUCCESS",
+  "buildNumber" : "ICTP-DEMO-001",
+  "browserSuite" : "HtmlUnit Selenium",
+  "apiCoverage" : "GET and POST validation",
+  "securityTool" : "OWASP ZAP Baseline",
+  "totalTests" : 5,
+  "passedTests" : 5,
+  "failedTests" : 0,
+  "securityIssues" : 0,
+  "stages" : [ {
+    "status" : "SUCCESS",
+    "name" : "Build"
+  }, {
+    "status" : "SUCCESS",
+    "name" : "UI Tests"
+  }, {
+    "status" : "SUCCESS",
+    "name" : "API Tests"
+  }, {
+    "status" : "SKIPPED",
+    "name" : "Security Scan"
+  }, {
+    "status" : "SUCCESS",
+    "name" : "Dashboard Publish"
+  } ],
+  "alerts" : [ {
+    "level" : "PASS",
+    "message" : "All automated validation suites completed successfully."
+  }, {
+    "level" : "WARN",
+    "message" : "OWASP ZAP integration is connected in demo mode. Install ZAP and rerun the scan for live findings."
+  } ]
+}
