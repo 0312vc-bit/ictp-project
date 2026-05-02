@@ -19,7 +19,7 @@ public class HealthApiTest extends BaseTest {
             .when()
             .get("/api/health")
             .then()
-            .statusCode(404)
+            .statusCode(200)
             .body("status", equalTo("OK"))
             .body("version", equalTo("1.0.0"))
             .extract().response();
