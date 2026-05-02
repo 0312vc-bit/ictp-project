@@ -2,17 +2,17 @@ window.testData = {
   "total" : 3,
   "tests" : [ {
     "description" : "Verify failed login with invalid credentials",
-    "durationMs" : "1022",
+    "durationMs" : "900",
     "testName" : "testInvalidLogin",
     "status" : "PASSED"
   }, {
     "description" : "Verify successful login with valid credentials",
-    "durationMs" : "54",
+    "durationMs" : "83",
     "testName" : "testValidLogin",
     "status" : "PASSED"
   }, {
     "description" : "Verify Health API returns 200 OK and correct JSON status",
-    "durationMs" : "5480",
+    "durationMs" : "5455",
     "testName" : "testHealthCheckStatus",
     "status" : "PASSED"
   } ],
