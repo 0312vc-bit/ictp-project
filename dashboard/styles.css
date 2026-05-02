@@ -349,3 +349,12 @@ body {
     color: var(--danger);
 }
 
+/* Specific styling for the risk badges in the modal */
+#securityDetailsBody .status-badge {
+    white-space: nowrap;
+    border-radius: 12px;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+

@@ -8,7 +8,7 @@ $htmlReportFile = "$PSScriptRoot\..\reports\zap-report.html"
 Write-Host "Starting Security Scan on $targetUrl" -ForegroundColor Cyan
 
 # We check if ZAP is installed in the default directory
-$zapPath = "C:\Program Files\OWASP\Zed Attack Proxy\zap.bat"
+$zapPath = "C:\Program Files\ZAP\Zed Attack Proxy\zap.bat"
 
 if (-Not (Test-Path $zapPath)) {
     Write-Host "OWASP ZAP not found at default location ($zapPath)." -ForegroundColor Yellow
