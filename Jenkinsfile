@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    parameters {
+        booleanParam(name: 'DEMO_FAIL', defaultValue: false, description: 'Enable one intentional failing test for viva demonstration')
+    }
+
     tools {
         jdk 'jdk17'
         maven 'maven3'
@@ -29,8 +33,8 @@ pipeline {
         stage('Automated Tests (UI & API)') {
             steps {
                 dir("${env.PROJECT_DIR}") {
-                    // Runs TestNG via Maven Surefire
-                    bat "mvn test"
+                    // Runs TestNG via Maven Surefire, passing the DEMO_FAIL parameter
+                    bat "mvn test -DdemoFail=${params.DEMO_FAIL}"
                 }
             }
             post {

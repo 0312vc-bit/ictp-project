@@ -20,6 +20,12 @@ public class LoginUiTest extends BaseTest {
 
     @Test(description = "Verify failed login with invalid credentials")
     public void testInvalidLogin() {
+        // Intentionally fail the test if the DEMO_FAIL parameter is true
+        boolean demoFail = Boolean.parseBoolean(System.getProperty("demoFail", "false"));
+        if (demoFail) {
+            Assert.fail("INTENTIONAL FAILURE: This test was forced to fail for the Viva Demonstration.");
+        }
+
         driver.get(BASE_URL + "/login");
         LoginPage loginPage = new LoginPage(driver);
         
