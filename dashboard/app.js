@@ -81,22 +81,22 @@ async function fetchTestResults() {
         // Update Table
         const tbody = document.getElementById('testResultsBody');
         tbody.innerHTML = '';
-        if (data.results) {
-            data.results.forEach(test => {
+        if (data.tests) {
+            data.tests.forEach(test => {
                 const tr = document.createElement('tr');
                 tr.style.animation = `fadeUp 0.5s ease forwards`;
                 
                 let statusBadge = '';
-                if (test.status === 'SUCCESS') {
+                if (test.status === 'PASSED' || test.status === 'SUCCESS') {
                     statusBadge = `<span class="status-badge PASSED">PASSED</span>`;
                 } else {
                     statusBadge = `<span class="status-badge FAILED">FAILED</span>`;
                 }
 
                 tr.innerHTML = `
-                    <td style="font-family: monospace; color: #e2e8f0;">${test.name}</td>
+                    <td style="font-family: monospace; color: #e2e8f0;">${test.testName}</td>
                     <td style="color: var(--text-secondary);">${test.description}</td>
-                    <td style="color: var(--text-secondary);">${test.duration}ms</td>
+                    <td style="color: var(--text-secondary);">${test.durationMs}ms</td>
                     <td>${statusBadge}</td>
                 `;
                 tbody.appendChild(tr);

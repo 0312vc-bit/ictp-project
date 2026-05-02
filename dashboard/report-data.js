@@ -2,17 +2,17 @@ window.testData = {
   "total" : 3,
   "tests" : [ {
     "description" : "Verify failed login with invalid credentials",
-    "durationMs" : "1758",
+    "durationMs" : "1183",
     "testName" : "testInvalidLogin",
     "status" : "PASSED"
   }, {
     "description" : "Verify successful login with valid credentials",
-    "durationMs" : "215",
+    "durationMs" : "65",
     "testName" : "testValidLogin",
     "status" : "PASSED"
   }, {
     "description" : "Verify Health API returns 200 OK and correct JSON status",
-    "durationMs" : "7981",
+    "durationMs" : "6251",
     "testName" : "testHealthCheckStatus",
     "status" : "PASSED"
   } ],
@@ -23,7 +23,7 @@ window.testData = {
 };
 window.zapData = {
     "@version": "2.14.0",
-    "@generated": "Sat, 02 May 2026 15:21:18",
+    "@generated": "Sat, 02 May 2026 16:43:37",
     "site": [
         {
             "@name": "http://localhost:8085",
