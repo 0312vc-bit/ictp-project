@@ -81,9 +81,6 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
-                    <systemPropertyVariables>
-                        <demoFail>${demoFail}</demoFail>
-                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>
