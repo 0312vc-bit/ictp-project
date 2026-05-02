@@ -90,6 +90,15 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy to AWS Cloud') {
+            steps {
+                dir("${env.PROJECT_DIR}") {
+                    // Execute the deployment script to push the dashboard to EC2
+                    powershell 'powershell -ExecutionPolicy Bypass -File .\\scripts\\deploy.ps1'
+                }
+            }
+        }
     }
 
     post {
