@@ -90,6 +90,21 @@ async function fetchZapResults() {
             }
         }, 1500);
 
+        // Populate Modal Data
+        const tbody = document.getElementById('securityDetailsBody');
+        tbody.innerHTML = '';
+        if (alertCount > 0) {
+            data.site[0].alerts.forEach(alert => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="color: #e2e8f0; font-weight: 600;">${alert.alert}</td>
+                    <td><span class="status-badge" style="color: var(--warning); border: 1px solid var(--warning);">${alert.riskdesc}</span></td>
+                    <td style="font-size: 0.85rem; color: var(--text-secondary);">${alert.desc}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
     } catch (error) {
         console.error('Error fetching ZAP results:', error);
         document.getElementById('securityAlerts').innerText = '0';
@@ -120,3 +135,22 @@ style.innerHTML = `
 }
 `;
 document.head.appendChild(style);
+
+// Modal Logic
+function openSecurityModal() {
+    const modal = document.getElementById('securityModal');
+    modal.classList.add('show');
+}
+
+function closeSecurityModal() {
+    const modal = document.getElementById('securityModal');
+    modal.classList.remove('show');
+}
+
+// Close modal when clicking outside of it
+window.onclick = function(event) {
+    const modal = document.getElementById('securityModal');
+    if (event.target == modal) {
+        closeSecurityModal();
+    }
+}

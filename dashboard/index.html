@@ -55,9 +55,9 @@
             </section>
 
             <!-- Security Metrics -->
-            <section class="glass-panel card stats-card security-card">
+            <section class="glass-panel card stats-card security-card" onclick="openSecurityModal()" style="cursor: pointer; position: relative;" title="Click to view vulnerability details">
                 <div class="card-header">
-                    <h2><i class="fa-solid fa-user-secret"></i> Security Scan (ZAP)</h2>
+                    <h2><i class="fa-solid fa-user-secret"></i> Security Scan (ZAP) <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.8em; margin-left: auto; color: var(--text-secondary);"></i></h2>
                 </div>
                 <div class="stats-grid security-stats">
                     <div class="stat-item warning">
@@ -95,6 +95,28 @@
                     </table>
                 </div>
             </section>
+        </div>
+    </div>
+
+    <!-- Security Details Modal -->
+    <div id="securityModal" class="modal">
+        <div class="modal-content glass-panel">
+            <span class="close-btn" onclick="closeSecurityModal()">&times;</span>
+            <h2><i class="fa-solid fa-bug" style="color: var(--warning);"></i> Vulnerability Report</h2>
+            <div class="table-container" style="margin-top: 1rem;">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>Vulnerability</th>
+                            <th>Risk Level</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody id="securityDetailsBody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
