@@ -11,6 +11,18 @@ pipeline {
     }
 
     stages {
+        stage('Initialize Dashboard') {
+            steps {
+                dir("${env.PROJECT_DIR}") {
+                    // Reset dashboard to 0 so the user sees it syncing in real-time
+                    powershell '''
+                        $jsContent = "window.testData = {};`nwindow.zapData = {};"
+                        Set-Content -Path dashboard\\report-data.js -Value $jsContent
+                    '''
+                }
+            }
+        }
+
         stage('Checkout') {
             steps {
                 echo "In a real Jenkins setup, Git checkout happens here automatically."
