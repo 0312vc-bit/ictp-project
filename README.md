@@ -29,10 +29,9 @@ ICTP
 
 ## Local run
 
-1. Run `mvn clean test`
+1. Run `mvns clean test`
 2. Open `dashboard/index.html`
 3. Review generated artifacts in `reports/`
-adding a new feature
 
 ## Notes
 
