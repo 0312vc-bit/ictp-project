@@ -55,46 +55,51 @@ if (-Not (Test-Path $zapPath)) {
 }
 
 Write-Host "Running ZAP Daemon in the background..." -ForegroundColor Cyan
-# Start ZAP in daemon mode (headless). Must set WorkingDirectory so it finds its JAR files!
 $zapDir = Split-Path $zapPath
 Start-Process -FilePath $zapPath -ArgumentList "-daemon -port 8090 -config api.disablekey=true" -WorkingDirectory $zapDir -NoNewWindow -PassThru
 
-# Wait for ZAP to start
-Start-Sleep -Seconds 15
-
-# Trigger Active Scan (Example)
-Write-Host "Triggering ZAP Spider..." -ForegroundColor Cyan
-Invoke-RestMethod -Uri "http://localhost:8090/JSON/spider/action/scan/?url=$targetUrl"
-
-Start-Sleep -Seconds 10 # Allow spider to run
-
-Write-Host "Triggering ZAP Active Scan..." -ForegroundColor Cyan
-Invoke-RestMethod -Uri "http://localhost:8090/JSON/ascan/action/scan/?url=$targetUrl"
-
-# Wait for scan to complete with a safety timeout (e.g., 5 minutes)
-$status = 0
-$timeoutCounter = 0
-while ($status -lt 100 -and $timeoutCounter -lt 60) {
-    Start-Sleep -Seconds 5
-    $timeoutCounter++
+# Robust Polling to wait for ZAP to fully initialize
+Write-Host "Waiting for ZAP to initialize..."
+$zapReady = $false
+for ($i = 0; $i -lt 30; $i++) {
     try {
-        $response = Invoke-RestMethod -Uri "http://localhost:8090/JSON/ascan/view/status/" -ErrorAction Stop
-        $status = [int]$response.status
-        Write-Host "Scan progress: $status%"
+        $response = Invoke-WebRequest -Uri "http://localhost:8090/" -UseBasicParsing -ErrorAction Stop
+        if ($response.StatusCode -eq 200) {
+            $zapReady = $true
+            break
+        }
     } catch {
-        Write-Host "Failed to get scan status. Retrying..." -ForegroundColor Yellow
+        Start-Sleep -Seconds 2
     }
 }
 
-if ($status -lt 100) {
-    Write-Host "Scan timed out or failed!" -ForegroundColor Red
+if (-Not $zapReady) {
+    Write-Host "ZAP failed to start within 60 seconds." -ForegroundColor Red
+    Exit 1
 }
 
-Write-Host "Generating Reports..." -ForegroundColor Cyan
+Write-Host "ZAP is online! Accessing target URL..." -ForegroundColor Cyan
+Invoke-RestMethod -Uri "http://localhost:8090/JSON/core/action/accessUrl/?url=$targetUrl" | Out-Null
+
+Write-Host "Triggering Fast Spider Scan..." -ForegroundColor Cyan
+Invoke-RestMethod -Uri "http://localhost:8090/JSON/spider/action/scan/?url=$targetUrl" | Out-Null
+
+# Wait for Spider to complete (Passive scanning happens automatically)
+$spiderStatus = 0
+while ($spiderStatus -lt 100) {
+    Start-Sleep -Seconds 2
+    try {
+        $resp = Invoke-RestMethod -Uri "http://localhost:8090/JSON/spider/view/status/"
+        $spiderStatus = [int]$resp.status
+        Write-Host "Spider progress: $spiderStatus%"
+    } catch {}
+}
+
+Write-Host "Generating Security Reports..." -ForegroundColor Cyan
 $jsonReport = Invoke-RestMethod -Uri "http://localhost:8090/JSON/core/view/alerts/?baseurl=$targetUrl"
 $jsonReport | ConvertTo-Json -Depth 5 | Set-Content $reportFile
 
 # Shut down ZAP
-Invoke-RestMethod -Uri "http://localhost:8090/JSON/core/action/shutdown/"
+Invoke-RestMethod -Uri "http://localhost:8090/JSON/core/action/shutdown/" | Out-Null
 
 Write-Host "Security Scan Complete! JSON Report saved to $reportFile" -ForegroundColor Green
