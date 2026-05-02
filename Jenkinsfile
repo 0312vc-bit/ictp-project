@@ -42,7 +42,9 @@ pipeline {
             steps {
                 dir("${env.PROJECT_DIR}") {
                     // Runs TestNG via Maven Surefire
-                    bat "mvn test"
+                    catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                        bat "mvn test"
+                    }
                 }
             }
             post {
@@ -59,7 +61,9 @@ pipeline {
             steps {
                 dir("${env.PROJECT_DIR}") {
                     // Runs the PowerShell ZAP script
-                    powershell 'powershell -ExecutionPolicy Bypass -File .\\scripts\\run-zap.ps1'
+                    catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                        powershell 'powershell -ExecutionPolicy Bypass -File .\\scripts\\run-zap.ps1'
+                    }
                 }
             }
             post {
