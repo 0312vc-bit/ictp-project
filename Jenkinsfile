@@ -63,6 +63,13 @@ pipeline {
         stage('Publish Premium Dashboard') {
             steps {
                 dir("${env.PROJECT_DIR}") {
+                    // Convert JSON reports into a JavaScript file to bypass local CORS restrictions
+                    powershell '''
+                        $testData = if (Test-Path reports\\test-results.json) { Get-Content -Raw -Path reports\\test-results.json } else { "{}" }
+                        $zapData = if (Test-Path reports\\zap-report.json) { Get-Content -Raw -Path reports\\zap-report.json } else { "{}" }
+                        $jsContent = "window.testData = $testData;`nwindow.zapData = $zapData;"
+                        Set-Content -Path dashboard\\report-data.js -Value $jsContent
+                    '''
                     archiveArtifacts artifacts: 'dashboard/**/*', allowEmptyArchive: false
                 }
             }

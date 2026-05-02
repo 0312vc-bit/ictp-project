@@ -9,31 +9,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function fetchTestResults() {
     try {
-        const response = await fetch('../reports/test-results.json');
-        if (!response.ok) throw new Error('Report not found');
-        
-        const data = await response.json();
+        if (!window.testData || Object.keys(window.testData).length === 0) {
+            throw new Error('Report data not generated yet.');
+        }
+        const data = window.testData;
         
         // Update Stats
-        document.getElementById('totalTests').innerText = data.total;
+        document.getElementById('totalTests').innerText = data.total || 0;
         
         const passedEl = document.getElementById('passedTests');
-        passedEl.innerText = data.passed;
-        animateValue(passedEl, 0, data.passed, 1000);
+        passedEl.innerText = 0;
+        animateValue(passedEl, 0, data.passed || 0, 1500);
 
         const failedEl = document.getElementById('failedTests');
-        failedEl.innerText = data.failed;
-        animateValue(failedEl, 0, data.failed, 1000);
+        failedEl.innerText = 0;
+        animateValue(failedEl, 0, data.failed || 0, 1500);
 
         // Progress bar
-        const passPercentage = (data.passed / data.total) * 100;
+        const total = data.total || 1; // avoid div by zero
+        const passPercentage = ((data.passed || 0) / total) * 100;
         const bar = document.getElementById('testProgressBar');
         setTimeout(() => {
             bar.style.width = passPercentage + '%';
             if(passPercentage < 100) {
                 bar.style.background = 'linear-gradient(90deg, #ef4444, #f87171)'; // Red if any failed
             }
-        }, 500);
+        }, 800);
 
         // Update Table
         const tbody = document.getElementById('testResultsBody');
@@ -63,10 +64,10 @@ async function fetchTestResults() {
 
 async function fetchZapResults() {
     try {
-        const response = await fetch('../reports/zap-report.json');
-        if (!response.ok) throw new Error('ZAP report not found');
-        
-        const data = await response.json();
+        if (!window.zapData || Object.keys(window.zapData).length === 0) {
+            throw new Error('ZAP report data not generated yet.');
+        }
+        const data = window.zapData;
         
         // Count alerts
         let alertCount = 0;
@@ -75,17 +76,19 @@ async function fetchZapResults() {
         }
 
         const alertsEl = document.getElementById('securityAlerts');
-        alertsEl.innerText = alertCount;
-        animateValue(alertsEl, 0, alertCount, 1000);
+        alertsEl.innerText = 0;
+        animateValue(alertsEl, 0, alertCount, 1500);
 
         const statusEl = document.getElementById('securityStatus');
-        if(alertCount > 0) {
-            statusEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color: var(--warning)"></i> ${alertCount} vulnerabilities found. Review ZAP HTML report for details.`;
-            statusEl.style.color = 'var(--warning)';
-        } else {
-            statusEl.innerHTML = `<i class="fa-solid fa-shield-check" style="color: var(--success)"></i> Code is secure.`;
-            statusEl.style.color = 'var(--success)';
-        }
+        setTimeout(() => {
+            if(alertCount > 0) {
+                statusEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color: var(--warning)"></i> ${alertCount} vulnerabilities found.`;
+                statusEl.style.color = 'var(--warning)';
+            } else {
+                statusEl.innerHTML = `<i class="fa-solid fa-shield-check" style="color: var(--success)"></i> Code is secure.`;
+                statusEl.style.color = 'var(--success)';
+            }
+        }, 1500);
 
     } catch (error) {
         console.error('Error fetching ZAP results:', error);
